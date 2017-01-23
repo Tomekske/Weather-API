@@ -1,6 +1,6 @@
 #==============================================================================#
-#Title           :Weather-API	                                               #
-#Description     :Script to scrap weather string from HTTP server			   #
+#Title           :Weather-API                                                  #
+#Description     :Script to scrap weather string from HTTP server              #
 #Author          :joostenstomek@gmail.com                                      #
 #Date            :01/01/2017                                                   #
 #Version         :1.0                                                          #
@@ -26,7 +26,8 @@ def getWeather():
     city = input("Enter a city: ") #Get local weather of a city
     weather = "http://api.openweathermap.org/data/2.5/weather?q={}&APPID=9f5834ee3f9f42f1671bc72b4626f9e7".format(city) #API URL
     gWeather = requests.get(weather) #response object
-    gContent = gWeather.content.decode("utf-8") #get content from webpage and decode bytes and convert them to a string
+    s = ""
+    gContent = gWeather.content.replace(b"\"",b"`").decode("utf-8") #get content from webpage and decode bytes,replace "" with `` and convert them to a string
     return gContent #return string to main program
 
 def connectToDatabase(hostname, username, password,database):
@@ -59,5 +60,7 @@ database = "weather" #set databe
 connectToInternet(http,port) #Execute this function for checking connection
 db = connectToDatabase(hostname,username,password,database) #connect to database
 weather = getWeather() #assign returned string to a variable
+
+print(weather) #print json string
 updateDb(db,weather) #update database
 db.close() #close database connection
